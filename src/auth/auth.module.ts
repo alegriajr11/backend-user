@@ -8,9 +8,12 @@ import { UsuarioEntity } from 'src/usuario/entity/usuario.entity';
 import { RolEntity } from 'src/rol/entity/rol.entity';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { PassportModule } from '@nestjs/passport';
+import { ActividadModule } from 'src/actividad/actividad.module';
+import { ActividadService } from 'src/actividad/actividad.service';
 
 @Module({
   imports:[
+    ActividadModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

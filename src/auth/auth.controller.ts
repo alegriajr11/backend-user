@@ -10,8 +10,7 @@ import { LoginDto } from './dto/login.dto';
 export class AuthController {
     constructor (private authService: AuthService){}
 
-    //@UseGuards(JwtAuthGuard, RolesGuard)
-    //@Roles('Administrador')
+    @UseGuards(JwtAuthGuard)
     @Post('register')
     async register(@Body() user: CreateUserDto){
         return this.authService.registerUser(user)

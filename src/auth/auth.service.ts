@@ -7,6 +7,8 @@ import { UsuarioEntity } from 'src/usuario/entity/usuario.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs'
 import { ConfigService } from '@nestjs/config';
+import { ActividadService } from 'src/actividad/actividad.service';
+import { CreateActividadDto } from 'src/actividad/dto/create-actividad.dto';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +21,7 @@ export class AuthService {
         @InjectRepository(RolEntity)
         private readonly rolRepository: Repository<RolEntity>,
         private readonly configService: ConfigService,
+        private readonly actividadServices: ActividadService
     ) { }
 
     async registerUser(userData: CreateUserDto) {
@@ -44,7 +47,15 @@ export class AuthService {
 
         await this.usuarioRepository.save(newUser)
 
-        return 'Usuario Registrado'
+        const actividadDto = new CreateActividadDto()
+        actividadDto.act_nombre = 'Registro Usuario'
+        actividadDto.act_descripcion = 'Usuario registrado en el sistema'
+        actividadDto.usu_id = newUser.usuario_id
+        actividadDto.act_fecha = new Date()
+
+        await this.actividadServices.registerActivity(actividadDto)
+
+        return 'Usuario Registrado Exitosamente'
     }
 
     async validateUser(usu_email: string, usu_password: string): Promise<any> {
@@ -76,7 +87,13 @@ export class AuthService {
             throw new BadRequestException('El usuario no tiene un rol asignado');
         }
 
-        console.log('Usuario validado:', user);
+        const actividadDto = new CreateActividadDto()
+        actividadDto.act_nombre = 'Inicio de Sesion'
+        actividadDto.act_descripcion = `El usuario ${user.usu_nombre} inicio sesion correctamente`
+        actividadDto.usu_id = user.usuario_id
+        actividadDto.act_fecha = new Date()
+
+        await this.actividadServices.registerActivity(actividadDto)
 
         //Usar el método generateToken existente
         return await this.generateToken(user);

@@ -6,6 +6,7 @@ import { RolModule } from './rol/rol.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { ActividadModule } from './actividad/actividad.module';
 
 @Module({
   imports: [
@@ -21,12 +22,13 @@ import { ConfigModule } from '@nestjs/config';
       password: 'root',
       database: 'backend-user',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: true,
+      synchronize: false,
       logging: false,
     }),
     RolModule,
     UsuarioModule,
     AuthModule,
+    ActividadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
